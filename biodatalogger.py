@@ -31,19 +31,19 @@ class Collector(object):
     def save_csv(self, data):
         filepath = CSV_FILEPATH.format(datetime.now().strftime("%Y-%m-%d"))
         with open(filepath, "a") as fh:
-            fh.write("{0},{1},{2}\n".format(*data))
+            fh.write("{0},{1},{2},{3},{4}\n".format(*data))
 
     def save_thingspeak(self, data):
         try:
-            url = THINGSPEAK.format(data[1], data[2])
+            url = THINGSPEAK.format(data[1], data[2], data[3], data[4])
             urllib2.urlopen(url)
         except:
             print traceback.print_exc()
             print "Still going...."
 
     def save_console(self, data):
-        print "{0} Current temp_c: {1}, temp_f: {2}".format(*data)
-
+       # print "{0} Current temp_c: {1}, temp_f: {2}".format(*data)
+        print "{0} Current temp_c: {1}, temp_f: {2}, album {3}, image {4}".format(*data)
     def collect_forever(self):
         while True:
             now = datetime.now()
@@ -56,7 +56,7 @@ class Collector(object):
             
 
 if __name__ == "__main__":
-    with daemon.DaemonContext():
+#    with daemon.DaemonContext():
         collector = Collector()
         collector.collect_forever()
 
