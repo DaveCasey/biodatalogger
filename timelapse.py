@@ -26,10 +26,11 @@ class BioTimeLapse(object):
             client = ImgurClient(IMGUR_ID,IMGUR_TOKEN)
             album_url=client.create_album(album_fields)
             return album_url
+        except SNIMissingWarning:
+            print "snimissingwarning"
+        except InsecurePlatformWarning:
+            print "oh noes insecure platform warning"
         except ImgurClientError, error:
-            if (("InsecurePlatformWarning" in error.error_message) or ("SNIMissingWarning" in error.error_message)):
-                print "there was an ssl warning, mitm may rickroll your images"
-            else:
                 print error.error_message, error.status_code
     def generate_filename(self):
         return '/home/pi/images/diybio_{0}.jpg'.format(datetime.now().strftime("%Y-%m-%d_%H_%M_%S.%f"))
@@ -40,10 +41,13 @@ class BioTimeLapse(object):
             client = ImgurClient(IMGUR_ID,IMGUR_TOKEN)
             image_url=client.upload_from_path(filename,config=config,anon=False)
             return image_url
+        except SNIMissingWarning:
+            print "snimissingwarning"
+            return image_url
+        except InsecurePlatformWarning:
+            print "oh noes insecure platform warning"
+            return image_url
         except ImgurClientError, error:
-            if (("InsecurePlatformWarning" in error.error_message) or ("SNIMissingWarning" in error.error_message)):
-                print "there was an ssl warning, mitm may rickroll your images"
-            else:
                 print error.error_message, error.status_code
 
     def start_capture(self, album_hash = '', seconds = 60, cycles = 100):
